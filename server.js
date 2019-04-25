@@ -49,7 +49,7 @@ function sendJoke() {
             console.log(err)
         }
 
-        console.log(response)
+        return response.data.value.joke
 
     })
 }
