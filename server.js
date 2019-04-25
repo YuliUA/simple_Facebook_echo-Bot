@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.get('/', function (req, res) {
     res.send("Hello I'm your bot :)")
 })
-token = "EAAFm081BAv0BABEpsFi53ZCA09UZCvatZAYgSzIBlZAriW31D74WPNZAoxwiSuplU9FC436jKTkzAZBGg2QCMit1TqbrHM8Fmfrg7K5fTpq8MMELcTmlnzY57cuZASTzbg6f0b44g1PdhPzpVrJ7zZCfgZCZC0or2tpUZA0T1r0IInOCYUvqP6nno8ZA"
+let token = "EAAFm081BAv0BABEpsFi53ZCA09UZCvatZAYgSzIBlZAriW31D74WPNZAoxwiSuplU9FC436jKTkzAZBGg2QCMit1TqbrHM8Fmfrg7K5fTpq8MMELcTmlnzY57cuZASTzbg6f0b44g1PdhPzpVrJ7zZCfgZCZC0or2tpUZA0T1r0IInOCYUvqP6nno8ZA"
 
 //facebook
 
