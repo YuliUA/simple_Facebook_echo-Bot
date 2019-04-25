@@ -32,22 +32,25 @@ app.post('/webhook', function (req, res) {
         let sender = event.sender.id
         if (event.message && event.message.text) {
             let text = event.message.text;
-            if(text.includes(' joke')){
+            if (text.includes(' joke')) {
                 sendJoke()
+            } else {
+
+                sendText(sender, `Text echo: ${text.substring(0, 100)}`)
             }
-            sendText(sender, `Text echo: ${text.substring(0, 100)}`)
         }
     }
     res.sendStatus(200)
 })
 
-function sendJoke(){
-    request('http://api.icndb.com/jokes/random/', function(err,response,body){
-        if(err){
+function sendJoke() {
+    request('http://api.icndb.com/jokes/random/', function (err, response, body) {
+        if (err) {
             console.log(err)
         }
-        response.value.joke
-        
+
+        console.log(response)
+
     })
 }
 
@@ -61,10 +64,10 @@ function sendText(sender, text) {
             recipient: { id: sender },
             message: messageData
         }
-    }, function(err, response, body){
-        if(err){
+    }, function (err, response, body) {
+        if (err) {
             console.log(`sending error: ${err}`)
-        } else if(response.body.error){
+        } else if (response.body.error) {
             console.log('response body error')
         }
     })
