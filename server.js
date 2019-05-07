@@ -32,47 +32,102 @@ app.post('/webhook', function (req, res) {
         let sender = event.sender.id
         if (event.message && event.message.text) {
             let text = event.message.text;
-            if (text.includes('joke')) {
-                sendJoke()
-            } else {
-
-                sendText(sender, `Text echo: ${text.substring(0, 100)}`)
-            }
+            // sendText(sender, `Text echo: ${text.substring(0, 100)}`)
+            decideMessage(sender, text)
+        }
+        if (event.postback) {
+            let text = JSON.stringify(event.postback)
+            desideMessage(sender, text)
+            continue
         }
     }
     res.sendStatus(200)
 })
 
-function sendJoke() {
-    request('http://api.icndb.com/jokes/random/', function (err, response, body) {
-        if (err) {
-            console.log(err)
-        }
+function decideMessage(sender, text1) {
+    let text = text1.toLowerCase();
+    if (text.includes('summer')) {
+        sendImageMessage(sender)
+    } else if (text.includes('winter')) {
 
-        return 'Ha ha ha'
-
-    })
+    } else {
+        sendText(sender, 'I like fall')
+        sendButtonMessage(sender, 'What is Your fav season?')
+    }
 }
 
-function sendText(sender, text) {
-    let messageData = { text: text }
-    request({
-        url: "https://graph.facebook.com/v3.2/me/messages",
-        qs: { access_token: token },
-        method: "POST",
-        json: {
-            recipient: { id: sender },
-            message: messageData
+function sendButtonMessage(sender, text) {
+    let messageData = {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "button",
+                "text": text,
+                "buttons": [
+                    {
+                        "type": "postback",
+                        "title": "Summer",
+                        "payload": "summer"
+                    },
+                    {
+                        "type": "postback",
+                        "title": "Winter",
+                        "payload": "winter"
+                    }
+                ]
+            }
         }
-    }, function (err, response, body) {
-        if (err) {
-            console.log(`sending error: ${err}`)
-        } else if (response.body.error) {
-            console.log('response body error')
+    }
+    sendRequest(sender, messageData)
+}
+function sendImageMessage(sender) {
+    let messageData = {
+        "attachment": {
+            "type": "image",
+            "payload": {
+                "url": "http://1xts2z4ff3rl1ckt3p2341f717fy-wpengine.netdna-ssl.com/wp-content/uploads/2016/06/summer.jpg"
+            }
         }
-    })
+    }
+    sendRequest(sender,messageData)
 }
 
-app.listen(PORT, function () {
-    console.log(`Hello from port ${PORT}`)
-})
+    function sendRequest(sender, messageData) {
+        request({
+            url: "https://graph.facebook.com/v3.2/me/messages",
+            qs: { access_token: token },
+            method: "POST",
+            json: {
+                recipient: { id: sender },
+                message: messageData
+            }
+        }, function (err, response, body) {
+            if (err) {
+                console.log(`sending error: ${err}`)
+            } else if (response.body.error) {
+                console.log('response body error')
+            }
+        })
+    }
+    function sendText(sender, text) {
+        let messageData = { text: text }
+        request({
+            url: "https://graph.facebook.com/v3.2/me/messages",
+            qs: { access_token: token },
+            method: "POST",
+            json: {
+                recipient: { id: sender },
+                message: messageData
+            }
+        }, function (err, response, body) {
+            if (err) {
+                console.log(`sending error: ${err}`)
+            } else if (response.body.error) {
+                console.log('response body error')
+            }
+        })
+    }
+
+    app.listen(PORT, function () {
+        console.log(`Hello from port ${PORT}`)
+    })
